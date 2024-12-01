@@ -36,12 +36,17 @@ client.on(Events.MessageCreate, async (message) => {
 
     let aiReply = completion.choices[0]?.message?.content || "I couldn't generate a response. Please try again later.";
 
+ 
     if (aiReply.length > 2000) {
-      aiReply = aiReply.substring(0, 2000);
-      aiReply += "...";
+      const truncatedReply = aiReply.substring(0, 2000);
+      await message.reply(truncatedReply); 
+
+      const remainingReply = aiReply.substring(2000);
+      await message.reply(remainingReply);
+    } else {
+      await message.reply(aiReply);
     }
 
-    await message.reply(aiReply);
   } catch (error) {
     console.error('Error interacting with API:', error);
     await message.reply("I'm having trouble connecting to the AI service. Please try again later.");
