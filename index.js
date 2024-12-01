@@ -34,7 +34,13 @@ client.on(Events.MessageCreate, async (message) => {
       model: 'llama3-8b-8192',
     });
 
-    const aiReply = completion.choices[0]?.message?.content || "I couldn't generate a response. Please try again later.";
+    let aiReply = completion.choices[0]?.message?.content || "I couldn't generate a response. Please try again later.";
+
+    if (aiReply.length > 2000) {
+      aiReply = aiReply.substring(0, 2000);
+      aiReply += "...";
+    }
+
     await message.reply(aiReply);
   } catch (error) {
     console.error('Error interacting with API:', error);
